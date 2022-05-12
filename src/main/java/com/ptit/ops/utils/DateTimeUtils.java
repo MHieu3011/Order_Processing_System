@@ -30,4 +30,10 @@ public class DateTimeUtils {
         calendar.setTimeInMillis(time * 1000);
         return sdf.format(calendar.getTime());
     }
+
+    public static String getDateNow() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        return sdf.format(date);
+    }
 }

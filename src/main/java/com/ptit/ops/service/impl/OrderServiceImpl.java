@@ -41,10 +41,15 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
         if (CommonUtils.checkEmpty(orderDate)) {
             throw new CommonException(ErrorCode.ORDER_DATE_MUST_NOT_EMPTY, "order date must not empty");
         }
+        DateTime d1, d2;
         try {
-            DateTime d = DateTimeFormat.forPattern(DateTimeUtils.DEFAULT_DATE_FORMAT).parseDateTime(orderDate);
+            d1 = DateTimeFormat.forPattern(DateTimeUtils.DEFAULT_DATE_FORMAT).parseDateTime(orderDate);
+            d2 = DateTimeFormat.forPattern(DateTimeUtils.DEFAULT_DATE_FORMAT).parseDateTime(DateTimeUtils.getDateNow());
         } catch (Exception e) {
             throw new CommonException(ErrorCode.ORDER_DATE_FORMAT_INVALID, "date format invalid");
+        }
+        if (d1.compareTo(d2) > 0) {
+            throw new CommonException(ErrorCode.ORDER_DATE_FORMAT_INVALID, "The order date cannot be less than the current date");
         }
 
         OrderEntity entity = new OrderEntity();

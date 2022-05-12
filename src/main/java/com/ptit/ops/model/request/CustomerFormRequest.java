@@ -1,10 +1,19 @@
 package com.ptit.ops.model.request;
 
-public class CustomerFormRequest extends BaseFormRequest{
+public class CustomerFormRequest extends BaseFormRequest {
 
+    private int id;
     private String name;
     private String address;
     private String phone;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

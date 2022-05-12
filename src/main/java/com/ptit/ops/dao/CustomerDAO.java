@@ -6,4 +6,6 @@ import com.ptit.ops.model.response.InfoCustomerResponse;
 public interface CustomerDAO {
 
     InfoCustomerResponse create(CustomerEntity entity) throws Exception;
+
+    InfoCustomerResponse update(CustomerEntity entity) throws Exception;
 }

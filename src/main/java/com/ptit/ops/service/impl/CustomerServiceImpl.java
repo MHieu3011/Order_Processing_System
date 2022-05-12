@@ -25,16 +25,16 @@ public class CustomerServiceImpl extends AbstractService implements CustomerServ
         String name = form.getName();
         String address = form.getAddress();
         String phone = form.getPhone();
-        if (CommonUtils.checkEmpty(name)){
-            throw new CommonException(ErrorCode.NAME_CUSTOMER_MUST_NOT_EMPTY,"Name customer must not empty");
+        if (CommonUtils.checkEmpty(name)) {
+            throw new CommonException(ErrorCode.NAME_CUSTOMER_MUST_NOT_EMPTY, "Name customer must not empty");
         }
-        if (CommonUtils.checkEmpty(address)){
-            throw new CommonException(ErrorCode.ADDRESS_CUSTOMER_MUST_NOT_EMPTY,"Address customer must not empty");
+        if (CommonUtils.checkEmpty(address)) {
+            throw new CommonException(ErrorCode.ADDRESS_CUSTOMER_MUST_NOT_EMPTY, "Address customer must not empty");
         }
-        if (CommonUtils.checkEmpty(phone)){
-            throw new CommonException(ErrorCode.PHONE_CUSTOMER_MUST_NOT_EMPTY,"Phone customer must not empty");
+        if (CommonUtils.checkEmpty(phone)) {
+            throw new CommonException(ErrorCode.PHONE_CUSTOMER_MUST_NOT_EMPTY, "Phone customer must not empty");
         }
-        if (!phone.matches("\\d+")){
+        if (!phone.matches("\\d+")) {
             throw new CommonException(ErrorCode.PHONE_INVALID, "Phone customer invalid");
         }
 
@@ -43,6 +43,49 @@ public class CustomerServiceImpl extends AbstractService implements CustomerServ
         entity.setAddress(address);
         entity.setPhone(phone);
         InfoCustomerResponse result = customerDAO.create(entity);
+
+        if (result.getName() != null) {
+            return new Response.Builder(1, HttpStatus.OK.value())
+                    .buildData(result)
+                    .buildMessage("Create customer successfully")
+                    .build();
+        } else {
+            return new Response.Builder(0, HttpStatus.OK.value())
+                    .buildMessage("Create customer error")
+                    .build();
+        }
+    }
+
+    @Override
+    public Response update(CustomerFormRequest form) throws Exception {
+        //validate dữ liệu đầu vào
+        int id = form.getId();
+        ;
+        String name = form.getName();
+        String address = form.getAddress();
+        String phone = form.getPhone();
+        if (id <= 0) {
+            throw new CommonException(ErrorCode.ID_INVALID, "ID invalid");
+        }
+        if (CommonUtils.checkEmpty(name)) {
+            throw new CommonException(ErrorCode.NAME_CUSTOMER_MUST_NOT_EMPTY, "Name customer must not empty");
+        }
+        if (CommonUtils.checkEmpty(address)) {
+            throw new CommonException(ErrorCode.ADDRESS_CUSTOMER_MUST_NOT_EMPTY, "Address customer must not empty");
+        }
+        if (CommonUtils.checkEmpty(phone)) {
+            throw new CommonException(ErrorCode.PHONE_CUSTOMER_MUST_NOT_EMPTY, "Phone customer must not empty");
+        }
+        if (!phone.matches("\\d+")) {
+            throw new CommonException(ErrorCode.PHONE_INVALID, "Phone customer invalid");
+        }
+
+        CustomerEntity entity = new CustomerEntity();
+        entity.setId(id);
+        entity.setName(name);
+        entity.setAddress(address);
+        entity.setPhone(phone);
+        InfoCustomerResponse result = customerDAO.update(entity);
 
         if (result.getName() != null) {
             return new Response.Builder(1, HttpStatus.OK.value())

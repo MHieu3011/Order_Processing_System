@@ -6,4 +6,6 @@ import com.ptit.ops.model.request.CustomerFormRequest;
 public interface CustomerService {
 
     Response create(CustomerFormRequest form) throws Exception;
+
+    Response update(CustomerFormRequest form) throws Exception;
 }

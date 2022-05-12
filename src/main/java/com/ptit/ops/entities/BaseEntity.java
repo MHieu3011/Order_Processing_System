@@ -14,6 +14,10 @@ public class BaseEntity {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Time getCreatedDate() {
         return createdDate;
     }
