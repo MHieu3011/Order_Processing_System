@@ -6,4 +6,6 @@ import com.ptit.ops.model.request.OrderFormRequest;
 public interface OrderService {
 
     Response create(OrderFormRequest form) throws Exception;
+
+    Response findByCustomerId(int customerId) throws Exception;
 }

@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
@@ -69,5 +71,35 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             releaseResource(connection, statement, resultSet);
         }
         return result;
+    }
+
+    @Override
+    public List<InfoOrderResponse> findByCustomerId(int customerId) throws Exception {
+        List<InfoOrderResponse> resultList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = MySQLConnectionFactory.getInstance().getMySQLConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT id, productid, amount, orderdate FROM oorder WHERE customerid = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, customerId);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                InfoOrderResponse result = new InfoOrderResponse();
+                result.setId(resultSet.getInt("id"));
+                result.setCustomerId(customerId);
+                result.setProductId(resultSet.getInt("productid"));
+                result.setAmount(resultSet.getInt("amount"));
+                result.setOrderDate(DateTimeUtils.formatTimeInSec(resultSet.getLong("orderdate")));
+                resultList.add(result);
+            }
+        } catch (Exception e) {
+            eLogger.error("Error OrderDAO.findByCustomerId order: {}", e.getMessage());
+        } finally {
+            releaseResource(connection, statement, resultSet);
+        }
+        return resultList;
     }
 }

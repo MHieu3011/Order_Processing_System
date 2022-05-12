@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderServiceImpl extends AbstractService implements OrderService {
 
@@ -71,6 +73,26 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
         } else {
             return new Response.Builder(0, HttpStatus.OK.value())
                     .buildMessage("Create order error")
+                    .build();
+        }
+    }
+
+    @Override
+    public Response findByCustomerId(int customerId) throws Exception {
+        //validate dữ liệu đầu vào
+        if (customerId <= 0) {
+            throw new CommonException(ErrorCode.ID_INVALID, "Customer ID invalid");
+        }
+
+        List<InfoOrderResponse> result = orderDAO.findByCustomerId(customerId);
+        if (result.size() != 0) {
+            return new Response.Builder(1, HttpStatus.OK.value())
+                    .buildData(result)
+                    .buildMessage("Search order info by customer id successfully")
+                    .build();
+        } else {
+            return new Response.Builder(0, HttpStatus.OK.value())
+                    .buildMessage("Search order info by customer id error")
                     .build();
         }
     }
