@@ -26,4 +26,11 @@ public class ConfigInfo {
     //---------------------------------------------------------------------------------------
     public static final int RESPONSE_CACHE_INFO_SIZE = config.getInt("response.cache.info.size");
     public static final int RESPONSE_CACHE_INFO_EXPIRE = config.getInt("response.cache.info.expire");
+
+    //---------------------------------------------------------------------------------------
+    public static final String DB_CUSTOMER = config.getString("database.table.customer");
+    public static final String DB_PRODUCT = config.getString("database.table.product");
+    public static final String DB_ORDER = config.getString("database.table.order");
+    public static final String DB_STOCK = config.getString("database.table.stock");
+
 }

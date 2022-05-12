@@ -1,11 +1,11 @@
-package com.ptit.ops.entities;
+package com.ptit.ops.model.request;
 
-public class OrderEntity extends BaseEntity {
+public class OrderFormRequest extends BaseFormRequest {
 
     private int customerId;
     private int productId;
     private int amount;
-    private long orderDate;
+    private String orderDate;
 
     public int getCustomerId() {
         return customerId;
@@ -31,11 +31,11 @@ public class OrderEntity extends BaseEntity {
         this.amount = amount;
     }
 
-    public long getOrderDate() {
+    public String getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(long orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
 }
