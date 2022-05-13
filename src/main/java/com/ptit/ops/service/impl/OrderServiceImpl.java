@@ -78,14 +78,16 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
     }
 
     @Override
-    public Response findByCustomerId(int customerId) throws Exception {
+    public Response findByCustomerId(OrderFormRequest form) throws Exception {
         //validate dữ liệu đầu vào
+        int customerId = form.getCustomerId();
         if (customerId <= 0) {
             throw new CommonException(ErrorCode.ID_INVALID, "Customer ID invalid");
         }
 
         List<InfoOrderResponse> result = orderDAO.findByCustomerId(customerId);
-        if (result.size() != 0) {
+
+        if (!result.isEmpty()) {
             return new Response.Builder(1, HttpStatus.OK.value())
                     .buildData(result)
                     .buildMessage("Search order info by customer id successfully")
@@ -93,6 +95,22 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
         } else {
             return new Response.Builder(0, HttpStatus.OK.value())
                     .buildMessage("Search order info by customer id error")
+                    .build();
+        }
+    }
+
+    @Override
+    public Response findAll(String requestUri) throws Exception {
+        List<InfoOrderResponse> result = orderDAO.findAll();
+
+        if (!result.isEmpty()) {
+            return new Response.Builder(1, HttpStatus.OK.value())
+                    .buildData(result)
+                    .buildMessage("Find all order successfully")
+                    .build();
+        } else {
+            return new Response.Builder(0, HttpStatus.OK.value())
+                    .buildMessage("Find all order error")
                     .build();
         }
     }

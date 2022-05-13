@@ -29,8 +29,8 @@ public class ConfigInfo {
 
     //---------------------------------------------------------------------------------------
     public static final String DB_CUSTOMER = config.getString("database.table.customer");
-    public static final String DB_PRODUCT = config.getString("database.table.product");
     public static final String DB_ORDER = config.getString("database.table.order");
     public static final String DB_STOCK = config.getString("database.table.stock");
+    public static final String DB_PRODUCT = config.getString("database.table.stock");
 
 }

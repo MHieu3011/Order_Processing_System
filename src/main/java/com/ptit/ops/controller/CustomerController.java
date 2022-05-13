@@ -85,4 +85,28 @@ public class CustomerController extends BaseController {
         }
         return new ResponseEntity<>(strResponse, HttpStatus.OK);
     }
+
+    //findAll customer
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<String> findAll(
+            HttpServletRequest request
+    ) {
+        StopWatch stopWatch = new StopWatch();
+        String requestUri = request.getRequestURI() + "?" + getRequestParams(request);
+        String strResponse;
+        Response serverResponse;
+        try {
+
+            serverResponse = customerService.findAll(requestUri);
+            strResponse = gson.toJson(serverResponse, Response.class);
+            requestLogger.info("Finish CustomerController.findAll {} in {}", requestUri, stopWatch.stop());
+        } catch (CommonException ce) {
+            eLogger.error("CustomerController Error: {}", ce.getMessage());
+            strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ce.getMessage());
+        } catch (Exception e) {
+            eLogger.error("CustomerController.findAll error: {}", e.getMessage());
+            strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ERROR_OCCURRED);
+        }
+        return new ResponseEntity<>(strResponse, HttpStatus.OK);
+    }
 }

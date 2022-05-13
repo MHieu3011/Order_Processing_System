@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerServiceImpl extends AbstractService implements CustomerService {
 
@@ -95,6 +97,22 @@ public class CustomerServiceImpl extends AbstractService implements CustomerServ
         } else {
             return new Response.Builder(0, HttpStatus.OK.value())
                     .buildMessage("Create customer error")
+                    .build();
+        }
+    }
+
+    @Override
+    public Response findAll(String requestUri) throws Exception {
+        List<InfoCustomerResponse> result = customerDAO.findAll();
+
+        if (!result.isEmpty()) {
+            return new Response.Builder(1, HttpStatus.OK.value())
+                    .buildData(result)
+                    .buildMessage("Find all customer successfully")
+                    .build();
+        } else {
+            return new Response.Builder(0, HttpStatus.OK.value())
+                    .buildMessage("Find all customer error")
                     .build();
         }
     }

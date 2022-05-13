@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
@@ -80,5 +82,33 @@ public class CustomerDAOImpl extends AbstractDAO implements CustomerDAO {
             releaseConnectAndStatement(connection, statement);
         }
         return result;
+    }
+
+    @Override
+    public List<InfoCustomerResponse> findAll() throws Exception {
+        List<InfoCustomerResponse> resultList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = MySQLConnectionFactory.getInstance().getMySQLConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT id, name, address, phone FROM " + ConfigInfo.DB_CUSTOMER;
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                InfoCustomerResponse result = new InfoCustomerResponse();
+                result.setId(resultSet.getInt("id"));
+                result.setName(resultSet.getString("name"));
+                result.setAddress(resultSet.getString("address"));
+                result.setPhone(resultSet.getString("phone"));
+                resultList.add(result);
+            }
+        } catch (Exception e) {
+            eLogger.error("Error CustomerDAO.findAll: {}", e.getMessage());
+        } finally {
+            releaseResource(connection, statement, resultSet);
+        }
+        return resultList;
     }
 }

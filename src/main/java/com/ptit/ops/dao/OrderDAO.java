@@ -10,4 +10,6 @@ public interface OrderDAO {
     InfoOrderResponse create(OrderEntity entity) throws Exception;
 
     List<InfoOrderResponse> findByCustomerId(int customerId) throws Exception;
+
+    List<InfoOrderResponse> findAll() throws Exception;
 }

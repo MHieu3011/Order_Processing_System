@@ -7,5 +7,7 @@ public interface OrderService {
 
     Response create(OrderFormRequest form) throws Exception;
 
-    Response findByCustomerId(int customerId) throws Exception;
+    Response findByCustomerId(OrderFormRequest form) throws Exception;
+
+    Response findAll(String requestUri) throws Exception;
 }

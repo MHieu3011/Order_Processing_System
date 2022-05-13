@@ -55,7 +55,7 @@ public class OrderController extends BaseController {
     }
 
     //search order info by customerId
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/id", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> findByCustomerId(
             @RequestParam("customer_id") int customerId,
             HttpServletRequest request
@@ -65,7 +65,10 @@ public class OrderController extends BaseController {
         String strResponse;
         Response serverResponse;
         try {
-            serverResponse = orderService.findByCustomerId(customerId);
+            OrderFormRequest form = new OrderFormRequest();
+            form.setRequestUri(requestUri);
+            form.setCustomerId(customerId);
+            serverResponse = orderService.findByCustomerId(form);
             strResponse = gson.toJson(serverResponse, Response.class);
             requestLogger.info("Finish OrderController.findByCustomerId {} in {}", requestUri, stopWatch.stop());
         } catch (CommonException ce) {
@@ -73,6 +76,30 @@ public class OrderController extends BaseController {
             strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ce.getMessage());
         } catch (Exception e) {
             eLogger.error("OrderController.findByCustomerId error: {}", e.getMessage());
+            strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ERROR_OCCURRED);
+        }
+        return new ResponseEntity<>(strResponse, HttpStatus.OK);
+    }
+
+    //find all order
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<String> findAll(
+            HttpServletRequest request
+    ) {
+        StopWatch stopWatch = new StopWatch();
+        String requestUri = request.getRequestURI() + "?" + getRequestParams(request);
+        String strResponse;
+        Response serverResponse;
+        try {
+
+            serverResponse = orderService.findAll(requestUri);
+            strResponse = gson.toJson(serverResponse, Response.class);
+            requestLogger.info("Finish OrderController.findAll {} in {}", requestUri, stopWatch.stop());
+        } catch (CommonException ce) {
+            eLogger.error("OrderController Error: {}", ce.getMessage());
+            strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ce.getMessage());
+        } catch (Exception e) {
+            eLogger.error("OrderController.findAll error: {}", e.getMessage());
             strResponse = buildFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ERROR_OCCURRED);
         }
         return new ResponseEntity<>(strResponse, HttpStatus.OK);

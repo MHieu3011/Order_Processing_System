@@ -8,4 +8,6 @@ public interface CustomerService {
     Response create(CustomerFormRequest form) throws Exception;
 
     Response update(CustomerFormRequest form) throws Exception;
+
+    Response findAll(String requestUri) throws Exception;
 }

@@ -6,6 +6,7 @@ import com.ptit.ops.exception.CommonException;
 import com.ptit.ops.factory.MySQLConnectionFactory;
 import com.ptit.ops.global.ConfigInfo;
 import com.ptit.ops.global.ErrorCode;
+import com.ptit.ops.model.response.InfoCustomerResponse;
 import com.ptit.ops.model.response.InfoOrderResponse;
 import com.ptit.ops.utils.DateTimeUtils;
 import org.springframework.stereotype.Repository;
@@ -86,7 +87,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, customerId);
             resultSet = statement.executeQuery();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 InfoOrderResponse result = new InfoOrderResponse();
                 result.setId(resultSet.getInt("id"));
                 result.setCustomerId(customerId);
@@ -97,6 +98,35 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             }
         } catch (Exception e) {
             eLogger.error("Error OrderDAO.findByCustomerId order: {}", e.getMessage());
+        } finally {
+            releaseResource(connection, statement, resultSet);
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<InfoOrderResponse> findAll() throws Exception {
+        List<InfoOrderResponse> resultList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = MySQLConnectionFactory.getInstance().getMySQLConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT id, customerid, productid, amount, orderdate FROM " + ConfigInfo.DB_ORDER;
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                InfoOrderResponse result = new InfoOrderResponse();
+                result.setId(resultSet.getInt("id"));
+                result.setCustomerId(resultSet.getInt("customerid"));
+                result.setProductId(resultSet.getInt("productid"));
+                result.setAmount(resultSet.getInt("amount"));
+                result.setOrderDate(DateTimeUtils.formatTimeInSec(resultSet.getLong("orderdate")));
+                resultList.add(result);
+            }
+        } catch (Exception e) {
+            eLogger.error("Error OrderDAO.findAll: {}", e.getMessage());
         } finally {
             releaseResource(connection, statement, resultSet);
         }
